@@ -112,15 +112,25 @@ class GenerateTests(unittest.TestCase):
         self.assertIn("with its Registered Office at 1 Main Rd", page)
         self.assertIn("Authorised Signatory — Acme Traders Pvt. Ltd.", page)
 
-    def test_existing_cautilya_page_matches_current_template(self):
-        reg = json.loads((REPO / "ndas.json").read_text())
-        c = next(r for r in reg if r["id"] == "cautilya-wealth-and-education")
-        g.main(["--company", c["client_name"], "--address", c["address"], "--gst", c["gst"],
-                "--signatory", c["signatory"], "--purpose", c["purpose"], "--date", c["exec_date"],
-                "--place", c["exec_place"], "--root", str(self.tmp)])
-        regenerated = (self.tmp / "ndas" / "cautilya-wealth-and-education.html").read_text()
-        committed = (REPO / "ndas" / "cautilya-wealth-and-education.html").read_text()
-        self.assertEqual(regenerated, committed)
+    def test_rocket_rush_address_is_new_everywhere(self):
+        g.main(self.base)
+        page = (self.tmp / "ndas" / "acme-traders.html").read_text()
+        self.assertEqual(page.count("A-23, NAVADA, PRAGATI KUNJ, ANAND VAN PHASE 2, Aduki, PO, DIST: Mathura, Uttar Pradesh - 281006"), 2)
+        self.assertNotIn("Tower E", page)
+        self.assertNotIn("Gaur City", page)
+        self.assertIn("GST No. 09ABLFR1598J1ZG, PAN - ABLFR1598J (“Receiving Party”)", page)
+        self.assertIn("<b>GST</b> 09ABLFR1598J1ZG · <b>PAN</b> ABLFR1598J", page)
+
+    def test_regenerate_rebuilds_page_without_new_entry(self):
+        g.main(self.base)
+        path = self.tmp / "ndas" / "acme-traders.html"
+        path.write_text("stale")
+        e = g.main(["--regenerate", "acme-traders", "--root", str(self.tmp)])
+        self.assertEqual(e["id"], "acme-traders")
+        self.assertIn("Acme Traders Pvt. Ltd.", path.read_text())
+        self.assertEqual(len(json.loads((self.tmp / "ndas.json").read_text())), 1)
+        with self.assertRaises(SystemExit):
+            g.main(["--regenerate", "nope", "--root", str(self.tmp)])
 
     def test_ordinals(self):
         self.assertEqual([g.ordinal(n) for n in (1, 2, 3, 4, 11, 12, 13, 21, 22, 23, 31)],

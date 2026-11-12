@@ -16,6 +16,10 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# Rocket Rush Partners (always the Receiving Party). Single source of truth for every NDA.
+RR_ADDRESS = "A-23, NAVADA, PRAGATI KUNJ, ANAND VAN PHASE 2, Aduki, PO, DIST: Mathura, Uttar Pradesh - 281006"
+RR_GST = "09ABLFR1598J1ZG"
+RR_PAN = "ABLFR1598J"
 BASE_URL = "https://teamrocketrush-ui.github.io/rr-ndas/ndas/"
 LEGAL_SUFFIXES = {"pvt", "private", "ltd", "limited", "llp", "inc", "incorporated", "llc",
                   "corp", "corporation", "co", "company", "opc", "fze", "plc"}
@@ -91,6 +95,9 @@ def render(template: str, v: dict) -> str:
     gst = v["gst"]
     has_gst = bool(gst) and gst.upper() not in {"N/A", "NA", "NONE", "-"}
     values = {
+        "RR_ADDRESS": html.escape(RR_ADDRESS),
+        "RR_GST": html.escape(RR_GST),
+        "RR_PAN": html.escape(RR_PAN),
         "CLIENT_COMPANY": html.escape(v["company"]),
         "CLIENT_ADDRESS": html.escape(v["address"]),
         "CLIENT_SIGNATORY": html.escape(v["signatory"]),
@@ -117,14 +124,17 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--type", choices=["company", "individual"], default="company",
                     help="Is the client a company (default) or an individual signing in their own name?")
-    ap.add_argument("--company", required=True,
+    ap.add_argument("--regenerate", metavar="ID", default=None,
+                    help="Rebuild the page of an existing NDA from ndas.json using the current template "
+                         "(no new entry). Use after a template or Rocket Rush detail change.")
+    ap.add_argument("--company", default=None,
                     help="Client company full legal name (for --type individual: the person's full name)")
     ap.add_argument("--address", default="",
                     help="Client registered office (required for a company) or residential address "
                          "(optional for an individual; omitted from the agreement when empty)")
     ap.add_argument("--gst", default="N/A", help="Client GST number, or N/A")
     ap.add_argument("--signatory", default="Authorised Signatory", help="Client signatory name")
-    ap.add_argument("--purpose", required=True, help='e.g. "LinkedIn Personal Branding"')
+    ap.add_argument("--purpose", default=None, help='e.g. "LinkedIn Personal Branding"')
     ap.add_argument("--date", default=None, help='Execution date text, default today e.g. "12th November 2026"')
     ap.add_argument("--place", default="Noida", help="Execution place (default Noida)")
     ap.add_argument("--private-suffix", action="store_true",
@@ -135,6 +145,20 @@ def main(argv=None):
     root = Path(a.root)
     registry_path = root / "ndas.json"
     registry = json.loads(registry_path.read_text(encoding="utf-8")) if registry_path.exists() else []
+
+    if a.regenerate:
+        entry = next((e for e in registry if e["id"] == a.regenerate), None)
+        if entry is None:
+            raise SystemExit(f"No NDA with id {a.regenerate!r} in ndas.json.")
+        v = {"type": entry.get("type", "company"), "company": entry["client_name"], "address": entry.get("address", ""),
+             "gst": entry.get("gst", "N/A"), "signatory": entry["signatory"], "purpose": entry["purpose"],
+             "date": entry["exec_date"], "place": entry["exec_place"], "key": entry["id"]}
+        page = render((root / "template.html").read_text(encoding="utf-8"), v)
+        (root / "ndas" / f"{v['key']}.html").write_text(page, encoding="utf-8")
+        print(json.dumps(entry, indent=2, ensure_ascii=False))
+        return entry
+    if not a.company or not a.purpose:
+        raise SystemExit("--company and --purpose are required.")
 
     v = {
         "type": a.type,

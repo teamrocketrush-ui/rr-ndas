@@ -167,7 +167,7 @@ body.signed #btn-sign,body.signed .sig-agreement{display:none}
     <div class="party dark">
       <div class="party-role">Receiving Party</div>
       <div class="party-name">Rocket Rush Partners</div>
-      <div class="party-meta">Tower E - 1736, 11th Avenue, Gaur City, Greater Noida, UP - 201009<br><b>GST</b> 09ABLFR1598J1ZG · <b>PAN</b> ABLFR1598J</div>
+      <div class="party-meta">{{RR_ADDRESS}}<br><b>GST</b> {{RR_GST}} · <b>PAN</b> {{RR_PAN}}</div>
     </div>
     <div class="party">
       <div class="party-role">Disclosing Party</div>
@@ -187,7 +187,7 @@ body.signed #btn-sign,body.signed .sig-agreement{display:none}
     <div class="sec-label">Preamble</div>
     <h2 class="sec-title">The Parties</h2>
     <div class="sec-rule"></div>
-    <p class="recital">This Agreement is executed at <b>{{EXEC_PLACE}}</b> on <b>{{EXEC_DATE}}</b> between <b>Rocket Rush Partners</b> with its Office at Tower E - 1736, 11th Avenue, Gaur City, Greater Noida, UP - 201009, GST No. 09ABLFR1598J1ZG, PAN - ABLFR1598J (“Receiving Party”) and <!--IF:company--><b>{{CLIENT_COMPANY}}</b> with its Registered Office at {{CLIENT_ADDRESS}}{{CLIENT_GST_SENTENCE}}<!--/IF--><!--IF:individual--><b>{{CLIENT_COMPANY}}</b>{{CLIENT_RESIDING_SENTENCE}}{{CLIENT_GST_SENTENCE}}<!--/IF--> (“Disclosing Party”).</p>
+    <p class="recital">This Agreement is executed at <b>{{EXEC_PLACE}}</b> on <b>{{EXEC_DATE}}</b> between <b>Rocket Rush Partners</b> with its Office at {{RR_ADDRESS}}, GST No. {{RR_GST}}, PAN - {{RR_PAN}} (“Receiving Party”) and <!--IF:company--><b>{{CLIENT_COMPANY}}</b> with its Registered Office at {{CLIENT_ADDRESS}}{{CLIENT_GST_SENTENCE}}<!--/IF--><!--IF:individual--><b>{{CLIENT_COMPANY}}</b>{{CLIENT_RESIDING_SENTENCE}}{{CLIENT_GST_SENTENCE}}<!--/IF--> (“Disclosing Party”).</p>
     <p class="recital">“Disclosing Party” and “Receiving Party” shall include each party's subsidiaries and parents and their respective directors, officers, and employees (“affiliates”), and the rights and obligations of the parties hereto therefore also shall inure to such affiliates and may be enforced directly by or against such affiliates.</p>
   </section>
 

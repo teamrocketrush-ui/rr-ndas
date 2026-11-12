@@ -61,12 +61,18 @@ Pass `--private-suffix` when the user wants a link that cannot be guessed from t
 ## Fixed content (never ask for these)
 | Item | Value |
 |---|---|
-| Receiving Party | Rocket Rush Partners, Tower E - 1736, 11th Avenue, Gaur City, Greater Noida, UP - 201009 |
+| Receiving Party | Rocket Rush Partners, A-23, NAVADA, PRAGATI KUNJ, ANAND VAN PHASE 2, Aduki, PO, DIST: Mathura, Uttar Pradesh - 281006 (defined once in `scripts/generate.py` as `RR_ADDRESS`, `RR_GST`, `RR_PAN`; used by every NDA) |
 | RR GST / PAN | 09ABLFR1598J1ZG / ABLFR1598J |
 | RR signatory | Nikhil Mishra (signature image is embedded in the template) |
 | Term | Confidentiality for 5 years from termination |
 | Governing law | India |
 | Security-incident notice | 1 business day |
+
+## Changing Rocket Rush's own details
+Edit `RR_ADDRESS`, `RR_GST` or `RR_PAN` in `scripts/generate.py`. New NDAs pick it up automatically.
+To update an NDA that already exists, run `python3 scripts/generate.py --regenerate {client-key}`.
+Do not regenerate an NDA that has already been signed or dated in the past without the user's say-so:
+it would change the text the client agreed to. (Cautilya, executed 22 May 2026, keeps the original Noida address.)
 
 ## Template Variables
 | Variable | Description |
