@@ -89,6 +89,20 @@ class GenerateTests(unittest.TestCase):
         self.assertIn('<div class="sig-title-text">Disclosing Party</div>', page)
         self.assertNotIn("GST No. N/A", page)
 
+    def test_individual_without_address(self):
+        e = g.main(["--type", "individual", "--company", "Rajnish Kumar", "--purpose", "LinkedIn Personal Branding",
+                    "--date", "1st January 2027", "--root", str(self.tmp)])
+        self.assertEqual(e["address"], "")
+        page = (self.tmp / "ndas" / "rajnish-kumar.html").read_text()
+        self.assertNotIn("residing", page)
+        self.assertNotIn("{{", page)
+        self.assertIn("<b>Rajnish Kumar</b> (“Disclosing Party”)", page)
+        self.assertIn('<div class="party-meta">Individual</div>', page)
+
+    def test_company_still_requires_address(self):
+        with self.assertRaises(SystemExit):
+            g.main(["--company", "Acme Pvt Ltd", "--purpose", "X", "--root", str(self.tmp)])
+
     def test_company_mode_keeps_original_clause_20(self):
         g.main(self.base)
         page = (self.tmp / "ndas" / "acme-traders.html").read_text()

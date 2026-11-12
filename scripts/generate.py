@@ -74,6 +74,18 @@ def pick_blocks(template: str, kind: str) -> str:
     return re.sub(r"<!--IF:(\w+)-->(.*?)<!--/IF-->", repl, template, flags=re.S)
 
 
+def card_meta(v: dict, has_gst: bool) -> str:
+    """Small text under the client's name in the party card."""
+    parts = []
+    if v["address"]:
+        parts.append(html.escape(v["address"]))
+    elif v["type"] == "individual":
+        parts.append("Individual")
+    if has_gst:
+        parts.append(f"<b>GST</b> {html.escape(v['gst'])}")
+    return "<br>".join(parts)
+
+
 def render(template: str, v: dict) -> str:
     template = pick_blocks(template, v["type"])
     gst = v["gst"]
@@ -86,6 +98,8 @@ def render(template: str, v: dict) -> str:
         "EXEC_DATE": html.escape(v["date"]),
         "EXEC_PLACE": html.escape(v["place"]),
         "CLIENT_GST_ROW_HTML": f"<br><b>GST</b> {html.escape(gst)}" if has_gst else "",
+        "CLIENT_RESIDING_SENTENCE": f", residing at {html.escape(v['address'])}" if v["address"] else "",
+        "CLIENT_CARD_META_HTML": card_meta(v, has_gst),
         "CLIENT_GST_SENTENCE": f", GST No. {html.escape(gst)}" if has_gst else "",
         "NDA_KEY_JS": js(v["key"]),
         "CLIENT_COMPANY_JS": js(v["company"]),
@@ -105,8 +119,9 @@ def main(argv=None):
                     help="Is the client a company (default) or an individual signing in their own name?")
     ap.add_argument("--company", required=True,
                     help="Client company full legal name (for --type individual: the person's full name)")
-    ap.add_argument("--address", required=True,
-                    help="Client registered office (company) or residential address (individual)")
+    ap.add_argument("--address", default="",
+                    help="Client registered office (required for a company) or residential address "
+                         "(optional for an individual; omitted from the agreement when empty)")
     ap.add_argument("--gst", default="N/A", help="Client GST number, or N/A")
     ap.add_argument("--signatory", default="Authorised Signatory", help="Client signatory name")
     ap.add_argument("--purpose", required=True, help='e.g. "LinkedIn Personal Branding"')
@@ -123,7 +138,8 @@ def main(argv=None):
 
     v = {
         "type": a.type,
-        "company": clean(a.company, "company"), "address": clean(a.address, "address"),
+        "company": clean(a.company, "company"),
+        "address": clean(a.address, "address", required=(a.type == "company")),
         "gst": clean(a.gst, "gst", required=False) or "N/A",
         "signatory": clean(a.company if a.type == "individual" else a.signatory, "signatory"), "purpose": clean(a.purpose, "purpose"),
         "date": clean(a.date or today_text(), "date"), "place": clean(a.place, "place"),
