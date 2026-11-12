@@ -67,7 +67,15 @@ def clean(value: str, field: str, required=True) -> str:
     return value
 
 
+def pick_blocks(template: str, kind: str) -> str:
+    """Keep <!--IF:kind-->…<!--/IF--> blocks that match, drop the others."""
+    def repl(m):
+        return m.group(2) if m.group(1) == kind else ""
+    return re.sub(r"<!--IF:(\w+)-->(.*?)<!--/IF-->", repl, template, flags=re.S)
+
+
 def render(template: str, v: dict) -> str:
+    template = pick_blocks(template, v["type"])
     gst = v["gst"]
     has_gst = bool(gst) and gst.upper() not in {"N/A", "NA", "NONE", "-"}
     values = {
@@ -93,8 +101,12 @@ def render(template: str, v: dict) -> str:
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--company", required=True, help="Client company full legal name")
-    ap.add_argument("--address", required=True, help="Client registered office address")
+    ap.add_argument("--type", choices=["company", "individual"], default="company",
+                    help="Is the client a company (default) or an individual signing in their own name?")
+    ap.add_argument("--company", required=True,
+                    help="Client company full legal name (for --type individual: the person's full name)")
+    ap.add_argument("--address", required=True,
+                    help="Client registered office (company) or residential address (individual)")
     ap.add_argument("--gst", default="N/A", help="Client GST number, or N/A")
     ap.add_argument("--signatory", default="Authorised Signatory", help="Client signatory name")
     ap.add_argument("--purpose", required=True, help='e.g. "LinkedIn Personal Branding"')
@@ -110,9 +122,10 @@ def main(argv=None):
     registry = json.loads(registry_path.read_text(encoding="utf-8")) if registry_path.exists() else []
 
     v = {
+        "type": a.type,
         "company": clean(a.company, "company"), "address": clean(a.address, "address"),
         "gst": clean(a.gst, "gst", required=False) or "N/A",
-        "signatory": clean(a.signatory, "signatory"), "purpose": clean(a.purpose, "purpose"),
+        "signatory": clean(a.company if a.type == "individual" else a.signatory, "signatory"), "purpose": clean(a.purpose, "purpose"),
         "date": clean(a.date or today_text(), "date"), "place": clean(a.place, "place"),
     }
     base = make_key(v["company"])
@@ -125,7 +138,7 @@ def main(argv=None):
     (root / "ndas" / f"{v['key']}.html").write_text(page, encoding="utf-8")
 
     entry = {
-        "id": v["key"], "client_name": v["company"], "signatory": v["signatory"], "gst": v["gst"],
+        "id": v["key"], "type": v["type"], "client_name": v["company"], "signatory": v["signatory"], "gst": v["gst"],
         "address": v["address"], "purpose": v["purpose"], "exec_date": v["date"], "exec_place": v["place"],
         "created_date": f"{datetime.now().day} {datetime.now().strftime('%B %Y')}",
         "url": f"{BASE_URL}{v['key']}.html",

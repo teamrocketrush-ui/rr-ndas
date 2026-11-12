@@ -35,15 +35,18 @@ rr-ndas/
 
 ### When the user says "new"
 Ask the questions **one at a time, back to back**. Wait for each answer.
-1. Client company full legal name?
-2. Client registered office address?
-3. Client GST number? (or N/A)
-4. Client signatory name? (default: "Authorised Signatory")
+Clients are either a **company** or an **individual** signing in their own name. If the user gives a
+person's name (or says the NDA is in the client's name), use `--type individual`; otherwise company.
+1. Client company full legal name? (individual: the person's full name)
+2. Client registered office address? (individual: residential address)
+3. Client GST number? (or N/A; usually N/A for an individual)
+4. Client signatory name? (company only; default "Authorised Signatory". Skip for an individual.)
 5. Purpose of the engagement? (e.g. "LinkedIn Personal Branding")
 6. Execution date and place? (default: today, Noida)
 
 Then show a short summary and ask the user to confirm. On confirmation:
-1. Run `python3 scripts/generate.py --company ... --address ... --gst ... --signatory ... --purpose ... [--date ...] [--place ...]`
+1. Run `python3 scripts/generate.py [--type individual] --company ... --address ... --gst ... --signatory ... --purpose ... [--date ...] [--place ...]`
+   (for an individual, `--company` carries the person's name and `--signatory` is not needed)
 2. Run the tests: `python3 -I -m unittest discover -s tests`
 3. Commit `ndas/{key}.html` and `ndas.json`, push to `main`.
 4. Reply with the link `https://teamrocketrush-ui.github.io/rr-ndas/ndas/{key}.html`.
@@ -138,6 +141,13 @@ The user chooses **Save as PDF**. In Chrome, untick "Headers and footers" for th
 The NDA pages and `ndas.json` contain client names and addresses. If this repo is public, anyone who
 finds the repo can read them, and `template.html` already carries `noindex` so search engines skip the pages.
 Keep the repo private if the plan supports Pages on private repos, or use `--private-suffix` links.
+
+## Individual clients
+`template.html` holds two variants of three passages, selected by `<!--IF:company-->…<!--/IF-->` and
+`<!--IF:individual-->…<!--/IF-->` blocks: the opening party description ("residing at" instead of
+"with its Registered Office at"), the signature title ("Disclosing Party" instead of "Authorised Signatory — {company}"),
+and clause 20 (Authority). The individual clause 20 wording was approved by the user on 12 Nov 2026 and should
+be reviewed by a lawyer. Every other clause is identical for both types.
 
 ## Clause numbering
 The original document restarted numbering partway (1–7, then 2–19). `template.html` numbers the 25 clauses

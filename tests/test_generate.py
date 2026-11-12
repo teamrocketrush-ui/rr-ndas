@@ -72,6 +72,42 @@ class GenerateTests(unittest.TestCase):
         self.assertEqual(e["exec_place"], "Noida")
         self.assertRegex(e["exec_date"], r"^\d{1,2}(st|nd|rd|th) [A-Z][a-z]+ \d{4}$")
 
+    def test_individual_mode(self):
+        args = ["--type", "individual", "--company", "Rajnish Kumar", "--address", "12 Park St, Delhi 110001",
+                "--gst", "N/A", "--purpose", "LinkedIn Personal Branding", "--date", "1st January 2027",
+                "--root", str(self.tmp)]
+        e = g.main(args)
+        self.assertEqual((e["id"], e["type"], e["signatory"]), ("rajnish-kumar", "individual", "Rajnish Kumar"))
+        page = (self.tmp / "ndas" / "rajnish-kumar.html").read_text()
+        self.assertNotIn("<!--IF", page)
+        self.assertNotIn("<!--/IF", page)
+        self.assertIn("<b>Rajnish Kumar</b>, residing at 12 Park St, Delhi 110001 (", page)
+        self.assertIn("natural person of full age and legal capacity", page)
+        self.assertNotIn("is a company duly constituted", page)
+        self.assertNotIn("Registered Office at 12 Park", page)
+        self.assertNotIn("Authorised Signatory — Rajnish Kumar", page)
+        self.assertIn('<div class="sig-title-text">Disclosing Party</div>', page)
+        self.assertNotIn("GST No. N/A", page)
+
+    def test_company_mode_keeps_original_clause_20(self):
+        g.main(self.base)
+        page = (self.tmp / "ndas" / "acme-traders.html").read_text()
+        self.assertNotIn("<!--IF", page)
+        self.assertIn("is a company duly constituted under the laws of their respective countries", page)
+        self.assertNotIn("natural person", page)
+        self.assertIn("with its Registered Office at 1 Main Rd", page)
+        self.assertIn("Authorised Signatory — Acme Traders Pvt. Ltd.", page)
+
+    def test_existing_cautilya_page_matches_current_template(self):
+        reg = json.loads((REPO / "ndas.json").read_text())
+        c = next(r for r in reg if r["id"] == "cautilya-wealth-and-education")
+        g.main(["--company", c["client_name"], "--address", c["address"], "--gst", c["gst"],
+                "--signatory", c["signatory"], "--purpose", c["purpose"], "--date", c["exec_date"],
+                "--place", c["exec_place"], "--root", str(self.tmp)])
+        regenerated = (self.tmp / "ndas" / "cautilya-wealth-and-education.html").read_text()
+        committed = (REPO / "ndas" / "cautilya-wealth-and-education.html").read_text()
+        self.assertEqual(regenerated, committed)
+
     def test_ordinals(self):
         self.assertEqual([g.ordinal(n) for n in (1, 2, 3, 4, 11, 12, 13, 21, 22, 23, 31)],
                          ["1st", "2nd", "3rd", "4th", "11th", "12th", "13th", "21st", "22nd", "23rd", "31st"])
