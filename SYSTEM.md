@@ -155,6 +155,24 @@ Keep the repo private if the plan supports Pages on private repos, or use `--pri
 and clause 20 (Authority). The individual clause 20 wording was approved by the user on 12 Nov 2026 and should
 be reviewed by a lawyer. Every other clause is identical for both types.
 
+## Custom clauses (per-NDA changes)
+When a client asks for wording changes, do **not** edit `template.html`. Put the changes in `custom/{client-key}.json`:
+```json
+{
+  "confidentiality_period": "text for the summary table (optional)",
+  "edits":   [{"clause": 18, "find": "exact existing text", "replace": "new text"}],
+  "append":  [{"clause": 8, "paragraphs": ["extra paragraph added to the end of clause 8"]}],
+  "new_clauses": [{"title": "Use of AI Tools", "paragraphs": ["clause 26 text"]}]
+}
+```
+Each `find` must match exactly once inside that clause, or generation stops with an error. New clauses are numbered
+from 26 and the heading ("Clauses 1 – N") updates itself. Apply with `python3 scripts/generate.py --regenerate {client-key}`.
+Always show the user the exact wording and get approval before pushing to `main`. Only change an NDA that has not
+been signed. If it was signed, make a new NDA or an amendment instead. A test fails if a committed page is out of sync
+with its custom file.
+Current custom NDAs: `rajnish-kumar` (AI tools, no reuse, ownership, private material, third-party access,
+term, deletion trigger, notices, Mathura jurisdiction).
+
 ## Clause numbering
 The original document restarted numbering partway (1–7, then 2–19). `template.html` numbers the 25 clauses
 1–25 in the original order with the original wording, plus typo fixes only. One heading was renamed:

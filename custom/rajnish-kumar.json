@@ -1,0 +1,83 @@
+{
+  "confidentiality_period": "5 years from termination of the Agreement / discussions; unpublished Private Material has no time limit",
+  "edits": [
+    {
+      "clause": 1,
+      "find": "other than the Receiving Party’s employees, sub-contractors, agents, independent contractors, outsourcing companies, professional advisors, outside counsel and auditors who have a need to know such Confidential Information, except as permitted under the terms of this Agreement and that such Confidential Information shall not be disclosed except if the party to whom such Confidential Information is being disclosed to, undertakes similar confidentiality obligations as contained in this Agreement; and",
+      "replace": "other than the Receiving Party’s employees, professional advisors, outside counsel and auditors who have a need to know such Confidential Information and are bound by confidentiality obligations similar to those contained in this Agreement, and Permitted Subcontractors approved in accordance with clause 2; and"
+    },
+    {
+      "clause": 1,
+      "find": "completion of Proposed Transaction or termination of this Agreement or execution of definitive agreements;",
+      "replace": "completion of the Proposed Transaction or termination of this Agreement;"
+    },
+    {
+      "clause": 1,
+      "find": "that all such Confidential Information has been destroyed or returned.",
+      "replace": "that all such Confidential Information has been destroyed or returned. For the avoidance of doubt, the execution of a Service Agreement (as defined in clause 28) or any other definitive agreement between the Parties shall not, by itself, require the return or destruction of any Confidential Information."
+    },
+    {
+      "clause": 2,
+      "find": "Receiving Party may disclose Confidential Information only to such subcontractors as may be pre-approved by Disclosing Party (“Permitted Subcontractor”) and the Personnel engaged in the performance of the Proposed Transaction or any part thereof and having a need to know such information in connection with the performance of the Proposed Transaction, provided that any disclosure of Confidential Information to a Permitted Subcontractor will be subject to Disclosing Party’s prior written consent.",
+      "replace": "Receiving Party may disclose Confidential Information only to the Personnel engaged in the performance of the Proposed Transaction or any part thereof who have a need to know such information in connection with the performance of the Proposed Transaction, and to such subcontractors, freelancers and other external collaborators as are approved in advance in writing by Disclosing Party (“Permitted Subcontractor”), provided that any disclosure of Confidential Information to a Permitted Subcontractor will be subject to Disclosing Party’s prior written consent."
+    },
+    {
+      "clause": 2,
+      "find": "Receiving Party will be responsible for all Personnel’s compliance with the terms of this Agreement.",
+      "replace": "Receiving Party will be responsible for all Personnel’s and Permitted Subcontractors’ compliance with the terms of this Agreement."
+    },
+    {
+      "clause": 11,
+      "find": "solely to its employees and permitted agents who have",
+      "replace": "solely to its employees and Permitted Subcontractors approved under clause 2 who have"
+    },
+    {
+      "clause": 11,
+      "find": "including independent contractors or consultants,",
+      "replace": "including freelancers, independent contractors, external collaborators or consultants,"
+    },
+    {
+      "clause": 18,
+      "find": "shall be settled in accordance with the laws of India.",
+      "replace": "shall be settled in accordance with the laws of India. The courts at Mathura, Uttar Pradesh, India shall have exclusive jurisdiction over any such dispute."
+    },
+    {
+      "clause": 19,
+      "find": "For the avoidance of doubt, it is clarified that the obligations of the Receiving Party to maintain the confidentiality of any Confidential Information (whether written or oral) are of unlimited duration and shall continue in full force and effect for a period of 5 (five) years from the date of the termination of the Agreement/discussions between the Parties relating to the Proposed Transaction or the termination of this Agreement.",
+      "replace": "The obligations of the Receiving Party to maintain the confidentiality of Confidential Information (whether written or oral) shall continue in full force and effect for a period of 5 (five) years from the date of termination of this Agreement or of the discussions between the Parties relating to the Proposed Transaction, whichever is later. Notwithstanding the foregoing, the Receiving Party’s obligations in respect of Private Material that has not been published with the Disclosing Party’s written approval shall continue without limit in time for so long as it remains unpublished."
+    },
+    {
+      "clause": 25,
+      "find": "Notice under this Agreement shall be given in writing to the parties at the address stated herein (or to such other address as it shall previously have notified in writing to the other party)",
+      "replace": "Notice under this Agreement shall be given in writing and may be sent by email to: Disclosing Party: rajnish@ixigo.com; Receiving Party: nikhil.rocketrush@gmail.com (or to such other email or postal address as a Party has previously notified in writing to the other). A notice sent by email is deemed received on the next business day after it is sent, unless the sender receives a delivery-failure message."
+    }
+  ],
+  "append": [
+    {
+      "clause": 8,
+      "paragraphs": [
+        "Without limiting the foregoing, Confidential Information expressly includes all manuscripts and drafts, personal archives, photographs, documents, and audio or video recordings of conversations (including interviews), together with all copies, transcripts, summaries and derivatives of any of them, in any form (“Private Material”), that the Disclosing Party has shared or shares with the Receiving Party, whether before or after the date of this Agreement. The Receiving Party shall use Private Material solely for the purposes of the agreed engagement under the Proposed Transaction and for no other purpose."
+      ]
+    }
+  ],
+  "new_clauses": [
+    {
+      "title": "Use of AI Tools",
+      "paragraphs": [
+        "The Receiving Party shall not upload, input or otherwise submit any Private Material to any artificial intelligence tool, service or platform (including generative AI, transcription and summarisation tools) without the Disclosing Party’s prior written approval, which applies only to the tool and purpose stated in the approval. In no event shall Private Material be used to train, fine-tune or improve any artificial intelligence or machine-learning model, whether by the Receiving Party or any third party."
+      ]
+    },
+    {
+      "title": "No Reuse of Material",
+      "paragraphs": [
+        "The Receiving Party shall not use, reproduce, reference or disclose the Disclosing Party’s Confidential Information, Private Material, or the content created under the engagement, for any other client, or in any portfolio, case study, testimonial or marketing material, without the Disclosing Party’s prior written approval for each such use. This clause prevails over clause 10 (Independent Development Activities)."
+      ]
+    },
+    {
+      "title": "Ownership of Content",
+      "paragraphs": [
+        "Ownership of, and rights in, the content created by the Receiving Party under the engagement shall be recorded in writing in the service agreement entered into between the Parties for the engagement (the “Service Agreement”). Pending the Service Agreement, nothing in this Agreement transfers or licenses to the Receiving Party any right in the Private Material or other Confidential Information, other than the limited right to use it for the engagement."
+      ]
+    }
+  ]
+}

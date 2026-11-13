@@ -71,6 +71,54 @@ def clean(value: str, field: str, required=True) -> str:
     return value
 
 
+DEFAULT_CONFIDENTIALITY_PERIOD = "5 years from termination of the Agreement / discussions"
+
+
+def load_custom(root: Path, key: str) -> dict:
+    """Per-NDA changes live in custom/{key}.json (see SYSTEM.md, 'Custom clauses')."""
+    path = root / "custom" / f"{key}.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
+def _clause_block(template: str, n: int):
+    m = re.search(r'(<details class="acc"[^>]*><summary class="acc-trigger"><span class="acc-num">%02d</span>.*?)(</details>)' % n,
+                  template, flags=re.S)
+    if not m:
+        raise SystemExit(f"Clause {n} not found in template.")
+    return m
+
+
+def apply_custom(template: str, custom: dict):
+    """Apply a custom file to the template HTML. Returns (template, number_of_clauses)."""
+    esc = lambda s: html.escape(s, quote=False)
+    for e in custom.get("edits", []):
+        m = _clause_block(template, e["clause"])
+        block = m.group(1)
+        if block.count(esc(e["find"])) != 1:
+            raise SystemExit(f"Custom edit for clause {e['clause']} must match exactly once: {e['find'][:70]!r}")
+        template = template.replace(m.group(0), block.replace(esc(e["find"]), esc(e["replace"])) + m.group(2), 1)
+    for ap in custom.get("append", []):
+        m = _clause_block(template, ap["clause"])
+        block = m.group(1)
+        if not block.endswith("</div>"):
+            raise SystemExit(f"Cannot append to clause {ap['clause']}.")
+        extra = "".join(f'<p class="">{esc(p)}</p>' for p in ap["paragraphs"])
+        template = template.replace(m.group(0), block[:-len("</div>")] + extra + "</div>" + m.group(2), 1)
+    count = 25
+    new = custom.get("new_clauses", [])
+    if new:
+        last = _clause_block(template, 25).group(0)
+        html_new = ""
+        for i, c in enumerate(new, 26):
+            body = "".join(f'<p class="">{esc(p)}</p>' for p in c["paragraphs"])
+            html_new += (f'\n<details class="acc"><summary class="acc-trigger"><span class="acc-num">{i:02d}</span>'
+                         f'<span class="acc-title">{esc(c["title"])}</span><span class="acc-chev">+</span></summary>'
+                         f'<div class="acc-body">{body}</div></details>')
+        template = template.replace(last, last + html_new, 1)
+        count += len(new)
+    return template, count
+
+
 def pick_blocks(template: str, kind: str) -> str:
     """Keep <!--IF:kind-->…<!--/IF--> blocks that match, drop the others."""
     def repl(m):
@@ -92,9 +140,13 @@ def card_meta(v: dict, has_gst: bool) -> str:
 
 def render(template: str, v: dict) -> str:
     template = pick_blocks(template, v["type"])
+    custom = v.get("custom") or {}
+    template, clause_count = apply_custom(template, custom)
     gst = v["gst"]
     has_gst = bool(gst) and gst.upper() not in {"N/A", "NA", "NONE", "-"}
     values = {
+        "CLAUSE_COUNT": str(clause_count),
+        "CONFIDENTIALITY_PERIOD": html.escape(custom.get("confidentiality_period", DEFAULT_CONFIDENTIALITY_PERIOD)),
         "RR_ADDRESS": html.escape(RR_ADDRESS),
         "RR_GST": html.escape(RR_GST),
         "RR_PAN": html.escape(RR_PAN),
@@ -153,7 +205,9 @@ def main(argv=None):
         v = {"type": entry.get("type", "company"), "company": entry["client_name"], "address": entry.get("address", ""),
              "gst": entry.get("gst", "N/A"), "signatory": entry["signatory"], "purpose": entry["purpose"],
              "date": entry["exec_date"], "place": entry["exec_place"], "key": entry["id"]}
+        v["custom"] = load_custom(root, v["key"])
         page = render((root / "template.html").read_text(encoding="utf-8"), v)
+        (root / "ndas").mkdir(exist_ok=True)
         (root / "ndas" / f"{v['key']}.html").write_text(page, encoding="utf-8")
         print(json.dumps(entry, indent=2, ensure_ascii=False))
         return entry
@@ -172,6 +226,7 @@ def main(argv=None):
     if a.private_suffix:
         base = f"{base}-{secrets.token_hex(2)}"
     v["key"] = unique_key(base, {e["id"] for e in registry})
+    v["custom"] = load_custom(root, v["key"])
 
     page = render((root / "template.html").read_text(encoding="utf-8"), v)
     (root / "ndas").mkdir(exist_ok=True)

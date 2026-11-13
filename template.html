@@ -178,7 +178,7 @@ body.signed #btn-sign,body.signed .sig-agreement{display:none}
 
   <table class="terms">
     <tr><td>Purpose</td><td>{{PURPOSE}} (the “Proposed Transaction”)</td></tr>
-    <tr><td>Confidentiality period</td><td>5 years from termination of the Agreement / discussions</td></tr>
+    <tr><td>Confidentiality period</td><td>{{CONFIDENTIALITY_PERIOD}}</td></tr>
     <tr><td>Security-incident notice</td><td>Within 1 business day</td></tr>
     <tr><td>Governing law</td><td>India</td></tr>
   </table>
@@ -202,7 +202,7 @@ body.signed #btn-sign,body.signed .sig-agreement{display:none}
 
   <section style="margin-top:44px">
     <div class="sec-label">Terms</div>
-    <h2 class="sec-title">Clauses 1 – 25</h2>
+    <h2 class="sec-title">Clauses 1 – {{CLAUSE_COUNT}}</h2>
     <div class="sec-rule"></div>
     <div class="tools"><span>Tap a clause to expand</span><button class="btn btn-ghost" type="button" onclick="document.querySelectorAll('.acc').forEach(d=>d.open=true)">Expand all</button></div>
 <details class="acc" open><summary class="acc-trigger"><span class="acc-num">01</span><span class="acc-title">Non-Disclosure</span><span class="acc-chev">+</span></summary><div class="acc-body"><p class="">In the course of the performance of Proposed Transaction, the Receiving Party may receive or have access to the Confidential Information of the Disclosing Party. Receiving Party’s engagement by Disclosing Party may bring it into close contact with Confidential Information of Disclosing Party or third parties with whom Disclosing Party conducts business and Receiving Party shall also disclose its Confidential Information to Disclosing Party during the course of providing the Proposed Transaction. In recognition of the foregoing, the Receiving Party covenants and agrees that:</p>
