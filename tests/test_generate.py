@@ -187,6 +187,7 @@ class GenerateTests(unittest.TestCase):
                        "shall not, by itself, require the return or destruction",
                        "without limit in time for so long as it remains unpublished"]:
             self.assertIn(needle, page)
+        self.assertIn("<td>Unlimited ongoing protection for unpublished private material</td>", page)
         self.assertNotIn("or execution of definitive agreements", page)
         self.assertNotIn("are of unlimited duration", page)
         self.assertNotIn("outsourcing companies", page)
