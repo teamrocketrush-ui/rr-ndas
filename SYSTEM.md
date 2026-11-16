@@ -42,7 +42,7 @@ person's name (or says the NDA is in the client's name), use `--type individual`
 3. Client GST number? (or N/A; usually N/A for an individual)
 4. Client signatory name? (company only; default "Authorised Signatory". Skip for an individual.)
 5. Purpose of the engagement? (e.g. "LinkedIn Personal Branding")
-6. Execution date and place? (default: today, Noida)
+6. Execution date and place? (default: today, Mathura)
 
 Then show a short summary and ask the user to confirm. On confirmation:
 1. Run `python3 scripts/generate.py [--type individual] --company ... --address ... --gst ... --signatory ... --purpose ... [--date ...] [--place ...]`
@@ -61,6 +61,7 @@ Pass `--private-suffix` when the user wants a link that cannot be guessed from t
 ## Fixed content (never ask for these)
 | Item | Value |
 |---|---|
+| Default place of execution | Mathura (`DEFAULT_PLACE` in `scripts/generate.py`) |
 | Receiving Party | Rocket Rush Partners, A-23, NAVADA, PRAGATI KUNJ, ANAND VAN PHASE 2, Aduki, PO, DIST: Mathura, Uttar Pradesh - 281006 (defined once in `scripts/generate.py` as `RR_ADDRESS`, `RR_GST`, `RR_PAN`; used by every NDA) |
 | RR GST / PAN | 09ABLFR1598J1ZG / ABLFR1598J |
 | RR signatory | Nikhil Mishra (signature image is embedded in the template) |

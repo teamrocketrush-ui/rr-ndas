@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 RR_ADDRESS = "A-23, NAVADA, PRAGATI KUNJ, ANAND VAN PHASE 2, Aduki, PO, DIST: Mathura, Uttar Pradesh - 281006"
 RR_GST = "09ABLFR1598J1ZG"
 RR_PAN = "ABLFR1598J"
+DEFAULT_PLACE = "Mathura"  # default place of execution for every new NDA
 BASE_URL = "https://teamrocketrush-ui.github.io/rr-ndas/ndas/"
 LEGAL_SUFFIXES = {"pvt", "private", "ltd", "limited", "llp", "inc", "incorporated", "llc",
                   "corp", "corporation", "co", "company", "opc", "fze", "plc"}
@@ -188,7 +189,7 @@ def main(argv=None):
     ap.add_argument("--signatory", default="Authorised Signatory", help="Client signatory name")
     ap.add_argument("--purpose", default=None, help='e.g. "LinkedIn Personal Branding"')
     ap.add_argument("--date", default=None, help='Execution date text, default today e.g. "12th November 2026"')
-    ap.add_argument("--place", default="Noida", help="Execution place (default Noida)")
+    ap.add_argument("--place", default=DEFAULT_PLACE, help=f"Execution place (default {DEFAULT_PLACE})")
     ap.add_argument("--private-suffix", action="store_true",
                     help="Append a random 4-char suffix to the link so it cannot be guessed from the company name")
     ap.add_argument("--root", default=str(ROOT), help="Repo root (default: this repo)")

@@ -69,7 +69,7 @@ class GenerateTests(unittest.TestCase):
         args = [a for a in self.base]
         i = args.index("--date"); del args[i:i + 2]
         e = g.main(args)
-        self.assertEqual(e["exec_place"], "Noida")
+        self.assertEqual(e["exec_place"], "Mathura")
         self.assertRegex(e["exec_date"], r"^\d{1,2}(st|nd|rd|th) [A-Z][a-z]+ \d{4}$")
 
     def test_individual_mode(self):
