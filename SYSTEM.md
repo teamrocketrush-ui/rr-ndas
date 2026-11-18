@@ -173,7 +173,16 @@ been signed. If it was signed, make a new NDA or an amendment instead. A test fa
 with its custom file.
 Current custom NDAs:
 - `rajnish-kumar`: AI tools, no reuse, ownership, private material, third-party access, term, deletion trigger, notices, Mathura jurisdiction.
-- `simplus-wealth-managers`: clause 10 (Independent Development Activities) replaced with the client's wording.
+- `mintit-investment-advisors`: clause 10 (Independent Development Activities) replaced with the client's wording.
+
+## Renaming a client
+The link key comes from the company name, so a rename moves the NDA to a new link. Only do this for an NDA that has
+not been signed (the signed record in Firestore and the Cloudinary image are stored under the old key).
+1. In `ndas.json` change `id`, `client_name` and `url`. Rename `custom/{old}.json` to `custom/{new}.json` if it exists.
+2. `python3 scripts/generate.py --regenerate {new}` builds `ndas/{new}.html`.
+3. Replace `ndas/{old}.html` with a redirect stub that contains no client name (see `ndas/simplus-wealth-managers.html`)
+   so a link already shared still works. Delete the stub instead if the user wants the old link to stop working.
+The old name stays in git history, so a public repo keeps it visible there.
 
 ## Clause numbering
 The original document restarted numbering partway (1–7, then 2–19). `template.html` numbers the 25 clauses
