@@ -194,6 +194,17 @@ class GenerateTests(unittest.TestCase):
         # his existing right is untouched: written approval before publication (clause 15)
         self.assertIn("prior written consent from the Disclosing party before publishing any content".replace("party", "Party"), page)
 
+    def test_simplus_clause_10_is_the_clients_wording(self):
+        page = (REPO / "ndas" / "simplus-wealth-managers.html").read_text()
+        for needle in ["The Receiving Party acknowledges that it and/or its affiliates may independently develop products",
+                       "provided that such development is genuinely independent",
+                       "shall not limit or override the Receiving Party’s confidentiality and non-use obligations under this Agreement.",
+                       "reasonable contemporaneous records evidencing that the development was undertaken independently"]:
+            self.assertIn(needle, page)
+        self.assertNotIn("without any limitation under this Agreement", page)
+        self.assertNotIn("(the “Independent Development Activities”)", page)
+        self.assertIn("Clauses 1 – 25", page)
+
     def test_ordinals(self):
         self.assertEqual([g.ordinal(n) for n in (1, 2, 3, 4, 11, 12, 13, 21, 22, 23, 31)],
                          ["1st", "2nd", "3rd", "4th", "11th", "12th", "13th", "21st", "22nd", "23rd", "31st"])

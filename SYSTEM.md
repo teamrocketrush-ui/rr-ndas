@@ -171,8 +171,9 @@ from 26 and the heading ("Clauses 1 – N") updates itself. Apply with `python3 
 Always show the user the exact wording and get approval before pushing to `main`. Only change an NDA that has not
 been signed. If it was signed, make a new NDA or an amendment instead. A test fails if a committed page is out of sync
 with its custom file.
-Current custom NDAs: `rajnish-kumar` (AI tools, no reuse, ownership, private material, third-party access,
-term, deletion trigger, notices, Mathura jurisdiction).
+Current custom NDAs:
+- `rajnish-kumar`: AI tools, no reuse, ownership, private material, third-party access, term, deletion trigger, notices, Mathura jurisdiction.
+- `simplus-wealth-managers`: clause 10 (Independent Development Activities) replaced with the client's wording.
 
 ## Clause numbering
 The original document restarted numbering partway (1–7, then 2–19). `template.html` numbers the 25 clauses

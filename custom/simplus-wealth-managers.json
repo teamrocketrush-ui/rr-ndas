@@ -1,0 +1,17 @@
+{
+  "edits": [
+    {
+      "clause": 10,
+      "find": "The Disclosing Party acknowledges that (i) the Receiving Party and/or its affiliates may be independently actively engaged, by itself or with third parties, in the development of products, content or businesses that may be similar to some of such Disclosing Party’s or its affiliates’ own Confidential Information (the “Independent Development Activities”), and (ii) the Receiving Party and/or its affiliates may continue to engage in such Independent Development Activities during, and after the completion of, discussions between the parties contemplated by this Agreement without any limitation under this Agreement; provided, however, that without the explicit written authorization of the Disclosing Party, the Receiving Party agrees that it will not use any Confidential Information provided by such Disclosing Party or any of its affiliates for such Independent Development Activities.",
+      "replace": "The Receiving Party acknowledges that it and/or its affiliates may independently develop products, services, content, technologies or businesses that may be similar to those of the Disclosing Party, provided that such development is genuinely independent and is undertaken without using, relying upon, deriving from, or incorporating any Confidential Information of the Disclosing Party or its affiliates. Nothing in this Agreement shall grant the Receiving Party any right or licence to use the Confidential Information for its own development or for the development, modification or commercialisation of any product, service, technology, process or business, and such independent development shall not limit or override the Receiving Party’s confidentiality and non-use obligations under this Agreement."
+    }
+  ],
+  "append": [
+    {
+      "clause": 10,
+      "paragraphs": [
+        "For the avoidance of doubt, the Receiving Party shall not use, directly or indirectly, any Confidential Information disclosed by the Disclosing Party during the discussions as a basis for developing, replicating, modifying or commercialising any product, service, technology, process or business that is substantially similar to or competitive with the Disclosing Party’s products, services or business. Where the Receiving Party asserts that any such development is independently developed, it shall be able to demonstrate such independent development through reasonable contemporaneous records evidencing that the development was undertaken independently and without use of or reliance upon the Disclosing Party’s Confidential Information."
+      ]
+    }
+  ]
+}
